@@ -1,31 +1,49 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.primary-btn {
+  margin-top: 15px;
+}
+
+.items-list {
+  margin-top: 10px;
+}
+
 .item-card {
   background: #1e2a38;
   padding: 15px;
-  margin-top: 15px;
+  margin-top: 12px;
   border-radius: 10px;
   text-align: left;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .item-card h4 {
-  margin: 0;
-  color: #00d4ff;
+  color: #00f2fe;
 }
 
-.item-card p {
-  margin: 4px 0;
-  font-size: 14px;
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 5px;
+  color: #ccc;
 }
 
-select {
-  width: 100%;
-  padding: 10px;
+.contact {
+  margin-top: 5px;
+  color: #fff;
+}
+
+.delete-btn {
   margin-top: 10px;
-  border-radius: 8px;
-  border: none;
+  background: #ff4d4d;
 }
 
-.no-items {
-  color: #bbb;
+.link {
+  margin-top: 10px;
+  color: white;
+  cursor: pointer;
 }
