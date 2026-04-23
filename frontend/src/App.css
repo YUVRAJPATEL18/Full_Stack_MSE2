@@ -1,39 +1,53 @@
-/* App.css */
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
 
+/* BACKGROUND */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+/* CONTAINER */
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: flex-start;   /* ✅ FIXED */
+  padding-top: 80px;         /* ✅ spacing */
 }
 
-/* card */
+/* CARD */
 .box {
   background: #1e293b;
-  padding: 40px;
-  border-radius: 15px;
-  width: 350px;
+  padding: 25px 20px;        /* ✅ reduced */
+  border-radius: 18px;
+  width: 280px;              /* ✅ smaller width */
   text-align: center;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-  color: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
+/* HEADINGS */
 h2, h3 {
   color: white;
+  margin-bottom: 15px;
 }
 
-/* inputs */
-input {
+/* INPUTS */
+input, select {
   width: 100%;
   padding: 12px;
-  margin: 10px 0;
+  margin: 8px 0;
   border-radius: 10px;
   border: none;
   outline: none;
   background: #e5e7eb;
 }
 
-/* buttons */
+/* BUTTON */
 button {
   width: 100%;
   padding: 12px;
@@ -50,32 +64,21 @@ button:hover {
   opacity: 0.9;
 }
 
+/* LINK */
 .link {
   margin-top: 15px;
   color: #cbd5f5;
   cursor: pointer;
 }
 
+/* LIST */
 .no-items {
   color: #aaa;
+  margin-top: 10px;
 }
 
+/* LOGOUT BUTTON */
 .logout-btn {
   margin-top: 20px;
   background: crimson;
-}
-select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: none;
-}
-
-.item-card {
-  background: #1e2a38;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  text-align: left;
 }
