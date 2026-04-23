@@ -7,45 +7,46 @@ export default function Dashboard() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
+  const API = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) {
-      alert("Login first");
-      window.location.href = "/";
-      return;
-    }
-    fetchExpenses();
-  }, []);
-
+  // 🔹 Fetch expenses
   const fetchExpenses = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/expenses`,
-        {
-          headers: { Authorization: token },
-        }
-      );
-
+      const res = await axios.get(`${API}/api/expenses`, {
+        headers: { Authorization: token },
+      });
       setExpenses(res.data);
     } catch (err) {
       console.error(err);
     }
   };
 
+  // 🔹 Add expense
   const addExpense = async () => {
     try {
+      if (!title || !amount || !category) {
+        alert("Fill all fields");
+        return;
+      }
+
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/expenses`,
+        `${API}/api/expense`,
         { title, amount, category },
         {
           headers: { Authorization: token },
         }
       );
 
-      fetchExpenses();
+      alert("Expense added");
+
+      setTitle("");
+      setAmount("");
+      setCategory("");
+
+      fetchExpenses(); // refresh list
     } catch (err) {
-      console.error(err);
+      alert("Error adding expense");
     }
   };
 
@@ -54,42 +55,59 @@ export default function Dashboard() {
     window.location.href = "/";
   };
 
-  const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+  useEffect(() => {
+    if (!token) {
+      window.location.href = "/";
+    } else {
+      fetchExpenses();
+    }
+  }, []);
 
   return (
     <div className="container">
-      <h2>Dashboard</h2>
+      <h2>Expense Dashboard</h2>
 
-      <button onClick={logout}>Logout</button>
+      {/* Add Expense */}
+      <div>
+        <input
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
-      <h3>Add Expense</h3>
+        <input
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
 
-      <input
-        placeholder="Title"
-        onChange={(e) => setTitle(e.target.value)}
-      />
+        <input
+          placeholder="Category (Food, Travel...)"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        />
 
-      <input
-        placeholder="Amount"
-        onChange={(e) => setAmount(e.target.value)}
-      />
+        <button onClick={addExpense}>Add Expense</button>
+      </div>
 
-      <input
-        placeholder="Category"
-        onChange={(e) => setCategory(e.target.value)}
-      />
+      <hr />
 
-      <button onClick={addExpense}>Add</button>
-
-      <h3>Total: ₹{total}</h3>
-
+      {/* Expense List */}
       <h3>Your Expenses</h3>
 
-      {expenses.map((e) => (
-        <p key={e._id}>
-          {e.title} - ₹{e.amount} ({e.category})
-        </p>
-      ))}
+      {expenses.length === 0 ? (
+        <p>No expenses yet</p>
+      ) : (
+        expenses.map((exp) => (
+          <div key={exp._id} style={{ marginBottom: "10px" }}>
+            <b>{exp.title}</b> - ₹{exp.amount} ({exp.category})
+          </div>
+        ))
+      )}
+
+      <br />
+
+      <button onClick={logout}>Logout</button>
     </div>
   );
 }
