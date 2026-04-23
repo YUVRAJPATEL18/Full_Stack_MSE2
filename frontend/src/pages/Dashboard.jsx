@@ -2,12 +2,31 @@ import { useState } from "react";
 
 export default function Dashboard() {
   const [items, setItems] = useState([]);
-  const [name, setName] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    type: "Lost",
+    location: ""
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const addItem = () => {
-    if (!name) return;
-    setItems([...items, { id: Date.now(), name }]);
-    setName("");
+    if (!form.name) return;
+
+    setItems([...items, { ...form, id: Date.now() }]);
+
+    setForm({
+      name: "",
+      type: "Lost",
+      location: ""
+    });
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
   };
 
   return (
@@ -15,14 +34,35 @@ export default function Dashboard() {
       <div className="box">
         <h2>Dashboard</h2>
 
+        {/* FORM */}
         <input
+          name="name"
           placeholder="Item Name"
-          value={name}
-          onChange={(e)=>setName(e.target.value)}
+          value={form.name}
+          onChange={handleChange}
+        />
+
+        <select
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+        >
+          <option>Lost</option>
+          <option>Found</option>
+        </select>
+
+        <input
+          name="location"
+          placeholder="Location"
+          value={form.location}
+          onChange={handleChange}
         />
 
         <button onClick={addItem}>Add Item</button>
 
+        <hr />
+
+        {/* ITEMS */}
         <h3>Your Items</h3>
 
         {items.length === 0 ? (
@@ -30,12 +70,16 @@ export default function Dashboard() {
         ) : (
           items.map(item => (
             <div className="item-card" key={item.id}>
-              {item.name}
+              <h4>{item.name}</h4>
+              <p><b>Type:</b> {item.type}</p>
+              <p><b>Location:</b> {item.location}</p>
             </div>
           ))
         )}
 
-        <button>Logout</button>
+        <button className="logout-btn" onClick={logout}>
+          Logout
+        </button>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ export default function Register() {
   const handleRegister = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        "https://full-stack-mse2.onrender.com/api/register", // ✅ correct backend route
         {
           name,
           email,
@@ -17,10 +17,11 @@ export default function Register() {
         }
       );
 
-      alert(res.data.message);
+      alert(res.data.message); // "User registered successfully"
       window.location.href = "/";
 
     } catch (err) {
+      console.log(err.response);
       alert(err.response?.data?.message || "Error");
     }
   };
@@ -49,7 +50,9 @@ export default function Register() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleRegister}>Register</button>
+        <button onClick={handleRegister}>
+          Register
+        </button>
 
         <p
           className="link"

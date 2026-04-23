@@ -8,14 +8,19 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        { email, password }
+        "https://full-stack-mse2.onrender.com/api/login", // ✅ correct route
+        {
+          email,
+          password
+        }
       );
 
       localStorage.setItem("token", res.data.token);
+      alert("Login successful");
       window.location.href = "/dashboard";
 
     } catch (err) {
+      console.log(err.response);
       alert(err.response?.data?.message || "Error");
     }
   };
@@ -25,8 +30,18 @@ export default function Login() {
       <div className="box">
         <h2>Login</h2>
 
-        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
+        <input
+          placeholder="Email"
+          value={email}
+          onChange={(e)=>setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e)=>setPassword(e.target.value)}
+        />
 
         <button onClick={handleLogin}>Login</button>
 

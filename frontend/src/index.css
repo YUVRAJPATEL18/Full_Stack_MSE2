@@ -1,3 +1,5 @@
+/* index.css */
+
 * {
   margin: 0;
   padding: 0;
@@ -8,63 +10,4 @@
 body {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.box {
-  background: #2c3e50;
-  padding: 30px;
-  border-radius: 15px;
-  width: 400px;
-  color: white;
-  text-align: center;
-}
-
-h2 {
-  margin-bottom: 20px;
-}
-
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: none;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  color: white;
-  cursor: pointer;
-}
-
-.link {
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.item-card {
-  background: #1e2a38;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 10px;
-  text-align: left;
-}
-
-.no-items {
-  margin-top: 10px;
-  color: #ccc;
 }
