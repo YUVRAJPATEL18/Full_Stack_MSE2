@@ -10,47 +10,59 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
-
-app.use(cors({
-  origin: "*", // change to frontend URL in production
-}));
+app.use(cors());
 
 // ================= CONFIG =================
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "secret123";
+const MONGO_URI =
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/lostfound";
 
 // ================= DB CONNECTION =================
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.log("❌ DB Error:", err));
 
-// ================= SCHEMAS =================
+// ================= MODELS =================
 
-// USER
+// USER MODEL
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
 });
 
 const User = mongoose.model("User", userSchema);
 
-// EXPENSE
-const expenseSchema = new mongoose.Schema({
+// ITEM MODEL (Lost & Found)
+const itemSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  title: String,
-  amount: Number,
-  category: String,
+  itemName: String,
+  description: String,
+  type: String, // Lost / Found
+  location: String,
   date: {
     type: Date,
     default: Date.now
-  }
+  },
+  contact: String
 });
 
-const Expense = mongoose.model("Expense", expenseSchema);
+const Item = mongoose.model("Item", itemSchema);
 
 // ================= AUTH MIDDLEWARE =================
 const authMiddleware = (req, res, next) => {
@@ -66,21 +78,21 @@ const authMiddleware = (req, res, next) => {
 
     next();
   } catch (err) {
-    res.status(401).json({ message: "Invalid Token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 
 // ================= ROUTES =================
 
-// TEST
+// TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("🚀 Backend running");
+  res.send("🚀 Backend running successfully");
 });
 
-// ================= AUTH =================
+// ================= AUTH ROUTES =================
 
 // REGISTER
-app.post("/api/auth/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -88,8 +100,8 @@ app.post("/api/auth/register", async (req, res) => {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    const existing = await User.findOne({ email });
-    if (existing) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
@@ -111,7 +123,7 @@ app.post("/api/auth/register", async (req, res) => {
 });
 
 // LOGIN
-app.post("/api/auth/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -141,29 +153,31 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// ================= EXPENSE =================
+// ================= ITEM ROUTES =================
 
-// ADD EXPENSE
-app.post("/api/expense", authMiddleware, async (req, res) => {
+// ADD ITEM (Protected)
+app.post("/api/items", authMiddleware, async (req, res) => {
   try {
-    const { title, amount, category } = req.body;
+    const { itemName, description, type, location, contact } = req.body;
 
-    if (!title || !amount) {
-      return res.status(400).json({ message: "Title & amount required" });
+    if (!itemName) {
+      return res.status(400).json({ message: "Item name required" });
     }
 
-    const expense = new Expense({
+    const item = new Item({
       userId: req.user.id,
-      title,
-      amount,
-      category
+      itemName,
+      description,
+      type,
+      location,
+      contact
     });
 
-    await expense.save();
+    await item.save();
 
     res.json({
-      message: "Expense added",
-      data: expense
+      message: "Item added successfully",
+      data: item
     });
 
   } catch (err) {
@@ -171,26 +185,74 @@ app.post("/api/expense", authMiddleware, async (req, res) => {
   }
 });
 
-// GET EXPENSES
-app.get("/api/expenses", authMiddleware, async (req, res) => {
+// GET ALL ITEMS
+app.get("/api/items", async (req, res) => {
   try {
-    const expenses = await Expense.find({
-      userId: req.user.id
-    });
-
-    res.json(expenses);
+    const items = await Item.find().sort({ date: -1 });
+    res.json(items);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// DELETE EXPENSE
-app.delete("/api/expense/:id", authMiddleware, async (req, res) => {
+// GET ITEM BY ID
+app.get("/api/items/:id", async (req, res) => {
   try {
-    await Expense.findByIdAndDelete(req.params.id);
+    const item = await Item.findById(req.params.id);
 
-    res.json({ message: "Expense deleted" });
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.json(item);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// UPDATE ITEM
+app.put("/api/items/:id", authMiddleware, async (req, res) => {
+  try {
+    const item = await Item.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.json({
+      message: "Item updated",
+      data: item
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE ITEM
+app.delete("/api/items/:id", authMiddleware, async (req, res) => {
+  try {
+    await Item.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Item deleted" });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// SEARCH ITEM
+app.get("/api/items/search", async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    const items = await Item.find({
+      itemName: { $regex: name, $options: "i" }
+    });
+
+    res.json(items);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -199,5 +261,5 @@ app.delete("/api/expense/:id", authMiddleware, async (req, res) => {
 
 // ================= SERVER =================
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
