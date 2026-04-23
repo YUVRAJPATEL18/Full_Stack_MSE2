@@ -8,16 +8,15 @@ export default function Register() {
 
   const handleRegister = async () => {
     try {
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/register`,
         { name, email, password }
       );
 
-      alert(res.data.message);
+      alert("Registered successfully");
       window.location.href = "/";
 
     } catch (err) {
-      console.log(err);
       alert(err.response?.data?.message || "Error");
     }
   };
@@ -27,13 +26,13 @@ export default function Register() {
       <div className="box">
         <h2>Register</h2>
 
-        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input placeholder="Name" onChange={(e)=>setName(e.target.value)} />
+        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
 
-        <button className="primary-btn" onClick={handleRegister}>Register</button>
+        <button onClick={handleRegister}>Register</button>
 
-        <p className="link" onClick={() => (window.location.href = "/")}>
+        <p className="link" onClick={()=>window.location.href="/"}>
           Already have account? Login
         </p>
       </div>
