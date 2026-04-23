@@ -9,7 +9,7 @@ export default function Register() {
   const handleRegister = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        `${import.meta.env.VITE_API_URL}/api/register`, // ✅ FIXED HERE
         {
           name,
           email,
@@ -18,8 +18,6 @@ export default function Register() {
       );
 
       alert(res.data.message);
-
-      // redirect to login
       window.location.href = "/";
 
     } catch (err) {
