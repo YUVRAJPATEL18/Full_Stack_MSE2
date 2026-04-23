@@ -31,7 +31,7 @@ export default function Dashboard() {
   <p className="no-items">No items yet</p>
 ) : (
   items.map(item => (
-    <div key={item._id}>{item.title}</div>
+    <div key={item.id}>{item.title}</div>
   ))
 )}
 
