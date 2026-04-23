@@ -64,11 +64,6 @@ button {
   text-align: left;
 }
 
-.delete-btn {
-  background: red;
-  margin-top: 10px;
-}
-
 .no-items {
   margin-top: 10px;
   color: #ccc;

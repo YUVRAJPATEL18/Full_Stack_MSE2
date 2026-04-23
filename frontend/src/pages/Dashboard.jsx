@@ -6,7 +6,6 @@ export default function Dashboard() {
 
   const addItem = () => {
     if (!name) return;
-
     setItems([...items, { id: Date.now(), name }]);
     setName("");
   };
@@ -14,7 +13,6 @@ export default function Dashboard() {
   return (
     <div className="container">
       <div className="box">
-
         <h2>Dashboard</h2>
 
         <input
@@ -33,13 +31,12 @@ export default function Dashboard() {
           items.map(item => (
             <div className="item-card" key={item.id}>
               {item.name}
-              <button className="delete-btn">Delete</button>
             </div>
           ))
         )}
 
         <button>Logout</button>
-
       </div>
     </div>
   );
+}
