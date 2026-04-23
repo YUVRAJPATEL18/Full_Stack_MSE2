@@ -8,58 +8,34 @@ export default function Register() {
 
   const handleRegister = async () => {
     try {
-      if (!name || !email || !password) {
-        alert("All fields required");
-        return;
-      }
-
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/register`,
-        {
-          name,
-          email,
-          password,
-        }
+        "http://localhost:3000/api/auth/register",
+        { name, email, password }
       );
 
       alert(res.data.message);
       window.location.href = "/";
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Registration failed");
+      console.log(err);
+      alert(err.response?.data?.message || "Error");
     }
   };
 
   return (
     <div className="container">
-      <h2>Register</h2>
+      <div className="box">
+        <h2>Register</h2>
 
-      <input
-        className="input"
-        placeholder="Name"
-        onChange={(e) => setName(e.target.value)}
-      />
+        <input placeholder="Name" onChange={(e)=>setName(e.target.value)} />
+        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
 
-      <input
-        className="input"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <button onClick={handleRegister}>Register</button>
 
-      <input
-        className="input"
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <button className="btn" onClick={handleRegister}>
-        Register
-      </button>
-
-      <p onClick={() => (window.location.href = "/")}>
-        Already have account? Login
-      </p>
+        <p onClick={()=>window.location.href="/"} style={{color:"white", cursor:"pointer"}}>
+          Already have account? Login
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,42 +1,75 @@
+/* FULL SCREEN CENTER */
 body {
   margin: 0;
-  font-family: Arial;
-  background: #0b1b34;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-/* card */
-.container {
-  width: 350px;
-  margin: 80px auto;
-  padding: 30px;
-  background: #1f2c3f;
-  border-radius: 12px;
+/* MAIN CARD */
+.box {
+  background: #243447;
+  padding: 40px 30px;
+  border-radius: 15px;
+  width: 400px;
+  max-width: 90%;
   text-align: center;
-  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-/* inputs */
-.input {
+/* TITLE */
+.box h2 {
+  color: white;
+  margin-bottom: 25px;
+}
+
+/* INPUT */
+.box input {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
   border-radius: 8px;
   border: none;
-  box-sizing: border-box;
+  outline: none;
+  font-size: 16px;
 }
 
-/* button */
-.btn {
+/* BUTTON */
+.box button {
   width: 100%;
   padding: 12px;
-  background: #3b6eea;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
   border: none;
-  border-radius: 8px;
   color: white;
+  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
 }
 
-.logout {
-  background: red;
+/* DIVIDER */
+hr {
+  margin: 25px 0;
+  border: 0.5px solid #ccc;
+}
+
+/* SECTION TITLE */
+.items-title {
+  color: white;
+  margin-bottom: 10px;
+}
+
+/* EMPTY TEXT */
+.no-items {
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+/* LOGOUT BUTTON */
+.logout-btn {
+  margin-top: 15px;
 }

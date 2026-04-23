@@ -8,30 +8,31 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        "http://localhost:3000/api/auth/login",
         { email, password }
       );
 
       localStorage.setItem("token", res.data.token);
-      alert("Login successful");
       window.location.href = "/dashboard";
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      alert("Login failed");
     }
   };
 
   return (
     <div className="container">
-      <h2>Login</h2>
+      <div className="box">
+        <h2>Login</h2>
 
-      <input className="input" placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
-      <input className="input" type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
+        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
 
-      <button className="btn" onClick={handleLogin}>Login</button>
+        <button onClick={handleLogin}>Login</button>
 
-      <p className="link" onClick={() => (window.location.href="/register")}>
-        Don’t have an account? Register
-      </p>
+        <p onClick={()=>window.location.href="/register"} style={{color:"white", cursor:"pointer"}}>
+          Don't have an account? Register
+        </p>
+      </div>
     </div>
   );
 }
