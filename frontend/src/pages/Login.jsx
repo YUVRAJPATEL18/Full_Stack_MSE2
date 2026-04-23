@@ -5,21 +5,18 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const API = import.meta.env.VITE_API_URL;
-
   const handleLogin = async () => {
     try {
-      const res = await axios.post(`${API}/api/auth/login`, {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        { email, password }
+      );
 
       localStorage.setItem("token", res.data.token);
-
       alert("Login successful");
       window.location.href = "/dashboard";
     } catch (err) {
-      alert(err.response?.data?.msg || "Invalid credentials");
+      alert(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -27,22 +24,12 @@ export default function Login() {
     <div className="container">
       <h2>Login</h2>
 
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <input className="input" placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
+      <input className="input" type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <button className="btn" onClick={handleLogin}>Login</button>
 
-      <button onClick={handleLogin}>Login</button>
-
-      <p onClick={() => (window.location.href = "/register")}>
+      <p className="link" onClick={() => (window.location.href="/register")}>
         Don’t have an account? Register
       </p>
     </div>
